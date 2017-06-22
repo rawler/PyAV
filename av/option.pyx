@@ -1,12 +1,11 @@
 cimport libav as lib
+mimport av.utils as utils
 
-
-cdef object _cinit_sentinel = object()
 
 cdef Option wrap_option(tuple choices, lib.AVOption *ptr):
     if ptr == NULL:
         return None
-    cdef Option obj = Option(_cinit_sentinel)
+    cdef Option obj = @{utils.alloc_private('Option')}
     obj.ptr = ptr
     obj.choices = choices
     return obj
@@ -38,9 +37,7 @@ cdef dict _TYPE_NAMES = {
 
 cdef class Option(object):
 
-    def __cinit__(self, sentinel):
-        if sentinel is not _cinit_sentinel:
-            raise RuntimeError('Cannot construct av.Option')
+    @@utils.def_private_cinit()
 
     property name:
         def __get__(self):
@@ -98,7 +95,7 @@ cdef class Option(object):
 cdef OptionChoice wrap_option_choice(lib.AVOption *ptr):
     if ptr == NULL:
         return None
-    cdef OptionChoice obj = OptionChoice(_cinit_sentinel)
+    cdef OptionChoice obj = @{utils.alloc_private('OptionChoice')}
     obj.ptr = ptr
     return obj
 
@@ -109,9 +106,7 @@ cdef class OptionChoice(object):
     choices of non-const option with same unit.
     """
 
-    def __cinit__(self, sentinel):
-        if sentinel is not _cinit_sentinel:
-            raise RuntimeError('Cannot construct av.OptionChoice')
+    @@utils.def_private_cinit()
 
     property name:
         def __get__(self):
